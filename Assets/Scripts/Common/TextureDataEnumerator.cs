@@ -41,7 +41,7 @@ public class TextureDataEnumerator : IEnumerator<(int X, int Y)>
         get {
             var y = (_currentIndex / _width);
             // var x = (_currentIndex % _width);
-            var x = (_currentIndex - (y * _height));
+            var x = (_currentIndex - (y * _width));
             return (x, y);
         }
     }
