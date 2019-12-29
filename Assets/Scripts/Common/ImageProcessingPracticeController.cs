@@ -34,6 +34,7 @@ public class ImageProcessingPracticeController : MonoBehaviour
         _ui.UpdateImageEffects(_allPractices.Select(p => p.Description));
 
         _ui.OnSourceChanged += this.OnSourceChanged;
+        _ui.OnEffectChanged += this.OnEffectChanged;
 
         if (_allPractices.Any()) {
             this.OnEffectChanged(0);
@@ -101,6 +102,8 @@ public class ImageProcessingPracticeController : MonoBehaviour
         _sourceSprite.sprite = sourceImage;
 
         _currentEffect.CreateResultTexture(sourceImage.texture);
+
+        Debug.Log($"Process {_currentEffect.GetType().Name}");
         _currentEffect.OnProcess(_sourceBuffer);
 
         var result = _currentEffect.ResultTexture;
