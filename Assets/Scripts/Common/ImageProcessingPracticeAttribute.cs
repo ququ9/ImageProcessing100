@@ -14,9 +14,9 @@ public class ImageProcessingPracticeAttribute : Attribute
         this.Number = number;
 
         if (string.IsNullOrEmpty(description)) {
-            this.Description = this.Number.ToString();
+            this.Description = $"{this.Number:000}";
         } else {
-            this.Description = $"{this.Number} {description}";
+            this.Description = $"{this.Number:000}: {description}";
         }
     }
 }

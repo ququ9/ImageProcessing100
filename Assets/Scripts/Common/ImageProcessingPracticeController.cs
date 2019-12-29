@@ -22,9 +22,9 @@ public class ImageProcessingPracticeController : MonoBehaviour
             var className = practice.GetType().Name;
             var attribute = practice.GetType().GetCustomAttribute<ImageProcessingPracticeAttribute>();
             if (attribute != null) {
-                allPractices.Add((attribute.Number, $"{className}: {attribute.Description}", practice));
+                allPractices.Add((attribute.Number, $"{attribute.Description} ({className})", practice));
             } else {
-                allPractices.Add((999, $"{className}: (Attribute not set)", practice));
+                allPractices.Add((999, $"999: (Attribute not set)", practice));
             }
         }
 
