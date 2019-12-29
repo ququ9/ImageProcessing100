@@ -41,6 +41,15 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
         return new TextureData(width, height, tempBuffer);
     }
 
+    public static TextureData CreateTemporalGrayScaleFromRGB(TextureData rgb)
+    {
+        var temp = TextureData.CreateTemporal(rgb.Width, rgb.Height);
+        foreach (var (x, y) in rgb) {
+            temp.SetPixel(x, y, ColorUtility.RGBtoGrayScale(rgb.GetPixel(x, y)));
+        }
+        return temp;
+    }
+
     public static NativeArray<ColorUtility.HSV> CreateTemporalHSVFromRGB(TextureData rgb)
     {
         return ColorUtility.RGBtoHSV(rgb._pixels);

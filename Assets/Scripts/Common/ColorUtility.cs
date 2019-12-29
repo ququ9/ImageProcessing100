@@ -13,7 +13,7 @@ public static class ColorUtility
         public short a;
     }
 
-    public static Color32 ToGrayScale(ref Color32 c)
+    public static Color32 RGBtoGrayScale(Color32 c)
     {
         var t = (byte)Mathf.Clamp((int)(0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b), 0, 255);
         return new Color32(t, t, t, c.a);
