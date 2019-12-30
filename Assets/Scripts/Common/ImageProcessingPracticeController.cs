@@ -120,7 +120,8 @@ public class ImageProcessingPracticeController : MonoBehaviour
         _currentEffect.CreateResultTexture(sourceImage.texture);
 
         Debug.Log($"Process {_currentEffect.GetType().Name}");
-        _currentEffect.OnProcess(_sourceBuffer);
+        _currentEffect.Initialize(_sourceBuffer);
+        _currentEffect.OnProcess();
 
         var result = _currentEffect.ResultTexture;
         _resultSprite.sprite = Sprite.Create(result, new Rect(0, 0, result.width, result.height), new Vector2(0.5f, 0.5f));

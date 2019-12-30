@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -10,19 +7,19 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
 {
     private const int MaxQuantization = 256;
 
-    public override void OnProcess(TextureData source)
+    public override void OnProcess()
     {
         var job = new ImageProcessJob();
-        job.Pixels = source.Pixels;
-        job.Width = source.Width;
-        job.Height = source.Height;
+        job.Pixels = _source.Pixels;
+        job.Width = _source.Width;
+        job.Height = _source.Height;
         job.ResultVariance = new NativeArray<float>(MaxQuantization, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
 
         var handle = job.Schedule(MaxQuantization, 8);
         handle.Complete();
 
         var result = job.ResultVariance;
-        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(source)) {
+        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(_source)) {
             var maxVariance = float.MinValue;
             var maxVarianceIndex = 0;
             for (var i = 0; i < MaxQuantization; ++i) {
@@ -38,8 +35,8 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
 
             var resultThreshold = maxVarianceIndex;
 
-            foreach (var (x, y) in source) {
-                var t = ColorUtility.RGBtoGrayScale(source.GetPixel(x, y));
+            foreach (var (x, y) in _source) {
+                var t = ColorUtility.RGBtoGrayScale(_source.GetPixel(x, y));
                 var c = (t.r >= resultThreshold) ? new Color32(255, 255, 255, t.a) : new Color32(0, 0, 0, t.a);
                 temp.SetPixel(x, y, c);
             }

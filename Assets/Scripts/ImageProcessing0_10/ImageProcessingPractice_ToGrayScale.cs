@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [ImageProcessingPractice(2, "グレースケール変換")]
 public class ImageProcessingPractice_ToGrayScale : ImageProcessingPractice
 {
-    public override void OnProcess(TextureData source)
+    public override void OnProcess()
     {
-        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(source)) { 
+        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(_source)) { 
             temp.ApplyToTexture(_result);
         }
     }
