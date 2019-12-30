@@ -108,6 +108,17 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
         }
     }
 
+    public void FillPixels(int startX, int startY, int fillWidth, int fillHeight, Color32 fillColor)
+    {
+        var endX = Mathf.Min(_width - 1, startX + fillWidth - 1);
+        var endY = Mathf.Min(_height - 1, startY + fillHeight - 1);
+        for (var y = startY; y <= endY; ++y) {
+            for (var x = startX; x <= endX; ++x) {
+                this.SetPixel(x, y, fillColor);
+            }
+        }
+    }
+
     public bool IsValidCoordinate(int x, int y)
     {
         if ((x < 0) || (x >= _width)) {
@@ -121,19 +132,66 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
 
     public Color32 CalcAverage()
     {
+        return this.CalcAverage(0, 0, _width, _height);
+    }
+
+    public Color32 CalcAverage(int startX, int startY, int sizeX, int sizeY)
+    {
+        var endX = Mathf.Min(_width - 1, startX + sizeX - 1);
+        var endY = Mathf.Min(_height - 1, startY + sizeY - 1);
+
         double sumR = 0.0f;
         double sumG = 0.0f;
         double sumB = 0.0f;
         double sumA = 0.0f;
-        foreach (var (x, y) in this) {
-            var c = this.GetPixel(x, y);
-            sumR += c.r;
-            sumG += c.g;
-            sumB += c.b;
-            sumA += c.a;
+        var count = 0;
+        for (var y = startY; y <= endY; ++y) {
+            for (var x = startX; x <= endX; ++x) {
+                var c = this.GetPixel(x, y);
+                sumR += c.r;
+                sumG += c.g;
+                sumB += c.b;
+                sumA += c.a;
+                ++count;
+            }
         }
 
-        double scale = 1.0 / _pixels.Length;
+        double scale = 1.0 / count;
+        var r = (byte)Mathf.Clamp((int)(scale * sumR), 0, 255);
+        var g = (byte)Mathf.Clamp((int)(scale * sumG), 0, 255);
+        var b = (byte)Mathf.Clamp((int)(scale * sumB), 0, 255);
+        var a = (byte)Mathf.Clamp((int)(scale * sumA), 0, 255);
+        return new Color32(r, g, b, a);
+    }
+
+    public Color32 CalcVariance(int startX, int startY, int sizeX, int sizeY)
+    {
+        var average = this.CalcAverage(startX, startY, sizeX, sizeY);
+        return this.CalcVariance(startX, startY, sizeX, sizeY, average);
+    }
+
+    public Color32 CalcVariance(int startX, int startY, int sizeX, int sizeY, Color32 average)
+    {
+        var endX = Mathf.Min(_width - 1, startX + sizeX - 1);
+        var endY = Mathf.Min(_height - 1, startY + sizeY - 1);
+
+        double sumR = 0.0f;
+        double sumG = 0.0f;
+        double sumB = 0.0f;
+        double sumA = 0.0f;
+        var count = 0;
+        for (var y = startY; y <= endY; ++y) {
+            for (var x = startX; x <= endX; ++x) {
+                var c = this.GetPixel(x, y);
+                sumR += ((c.r - average.r) * (c.r - average.r));
+                sumG += ((c.g - average.g) * (c.g - average.g));
+                sumB += ((c.b - average.b) * (c.b - average.b));
+                sumA += ((c.a - average.a) * (c.a - average.a));
+                ++count;
+            }
+        }
+
+        double scale = 1.0 / count;
         var r = (byte)Mathf.Clamp((int)(scale * sumR), 0, 255);
         var g = (byte)Mathf.Clamp((int)(scale * sumG), 0, 255);
         var b = (byte)Mathf.Clamp((int)(scale * sumB), 0, 255);
@@ -143,43 +201,37 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
 
     public Color32 CalcVariance()
     {
-        return this.CalcVariance(this.CalcAverage());
+        return this.CalcVariance(0, 0, _width, _height, this.CalcAverage());
     }
 
     public Color32 CalcVariance(Color32 average)
     {
-        double sumR = 0.0f;
-        double sumG = 0.0f;
-        double sumB = 0.0f;
-        double sumA = 0.0f;
-        foreach (var (x, y) in this) {
-            var c = this.GetPixel(x, y);
-            sumR += ((c.r - average.r) * (c.r - average.r));
-            sumG += ((c.g - average.g) * (c.g - average.g));
-            sumB += ((c.b - average.b) * (c.b - average.b));
-            sumA += ((c.a - average.a) * (c.a - average.a));
-        }
-
-        double scale = 1.0 / _pixels.Length;
-        var r = (byte)Mathf.Clamp((int)(scale * sumR), 0, 255);
-        var g = (byte)Mathf.Clamp((int)(scale * sumG), 0, 255);
-        var b = (byte)Mathf.Clamp((int)(scale * sumB), 0, 255);
-        var a = (byte)Mathf.Clamp((int)(scale * sumA), 0, 255);
-        return new Color32(r, g, b, a);
+        return this.CalcVariance(0, 0, _width, _height, average);
     }
 
-    public Color32 CalcStandardDeviation()
+    public Color32 CalcStandardDeviation(int startX, int startY, int sizeX, int sizeY)
     {
-        return this.CalcStandardDeviation(this.CalcAverage());
+        var average = this.CalcAverage(startX, startY, sizeX, sizeY);
+        return this.CalcStandardDeviation(startX, startY, sizeX, sizeY, average);
     }
 
-    public Color32 CalcStandardDeviation(Color32 average)
+    public Color32 CalcStandardDeviation(int startX, int startY, int sizeX, int sizeY, Color32 average)
     {
-        var v = this.CalcVariance();
+        var v = this.CalcVariance(startX, startY, sizeX, sizeY, average);
         var r = (byte)Mathf.Clamp((int)Mathf.Sqrt(v.r), 0, 255);
         var g = (byte)Mathf.Clamp((int)Mathf.Sqrt(v.g), 0, 255);
         var b = (byte)Mathf.Clamp((int)Mathf.Sqrt(v.b), 0, 255);
         var a = (byte)Mathf.Clamp((int)Mathf.Sqrt(v.a), 0, 255);
         return new Color32(r, g, b, a);
+    }
+
+    public Color32 CalcStandardDeviation()
+    {
+        return this.CalcStandardDeviation(0, 0, _width, _height);
+    }
+
+    public Color32 CalcStandardDeviation(Color32 average)
+    {
+        return this.CalcStandardDeviation(0, 0, _width, _height, average);
     }
 }
