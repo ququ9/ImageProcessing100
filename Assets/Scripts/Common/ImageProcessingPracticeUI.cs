@@ -9,10 +9,12 @@ public class ImageProcessingPracticeUI : MonoBehaviour
     [SerializeField] private Sprite[] _sourceImages = default;
     [SerializeField] private Dropdown _sourceDropdown = default;
     [SerializeField] private Dropdown _imageEffects = default;
+    [SerializeField] private Button _saveButton = default;
 
     public Sprite CurrentSourceImage => _sourceImages[_sourceDropdown.value];
     public Action OnSourceChanged { get; set; }
     public Action<int> OnEffectChanged { get; set; }
+    public Action OnSave { get; set; }
 
     public void UpdateImageEffects(IEnumerable<string> imageEffects)
     {
@@ -28,6 +30,10 @@ public class ImageProcessingPracticeUI : MonoBehaviour
 
         _imageEffects.onValueChanged.AddListener((index) => {
             this.OnEffectChanged?.Invoke(index);
+        });
+
+        _saveButton.onClick.AddListener(() => {
+            this.OnSave?.Invoke();
         });
     }
 }

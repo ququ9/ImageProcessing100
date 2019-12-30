@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageProcessingPracticeController : MonoBehaviour
@@ -35,6 +36,7 @@ public class ImageProcessingPracticeController : MonoBehaviour
 
         _ui.OnSourceChanged += this.OnSourceChanged;
         _ui.OnEffectChanged += this.OnEffectChanged;
+        _ui.OnSave += this.OnSaveResult;
 
         if (_allPractices.Any()) {
             this.OnEffectChanged(0);
@@ -44,6 +46,20 @@ public class ImageProcessingPracticeController : MonoBehaviour
     private void OnDestroy()
     {
         this.ClearBuffer();
+    }
+
+    private void OnSaveResult()
+    {
+        if (_currentEffect == null) {
+            return;
+        }
+
+        var att = _currentEffect.GetType().GetCustomAttribute<ImageProcessingPracticeAttribute>();
+        var fileName = $"{att?.Number ?? 999:000}.png";
+        var path = Path.Combine(Application.dataPath, "../Results", fileName);
+        File.WriteAllBytes(path, _currentEffect.ResultTexture.EncodeToPNG());
+
+        Debug.Log($"Save {path}");
     }
 
     private void ClearBuffer()
