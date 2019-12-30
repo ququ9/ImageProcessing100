@@ -48,14 +48,12 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
 
     private struct ImageProcessJob : IJobParallelFor
     {
-        [ReadOnly]
-        public NativeArray<Color32> Pixels;
+        [ReadOnly] public NativeArray<Color32> Pixels;
 
-        [WriteOnly]
-        public NativeArray<float> ResultVariance;
+        [WriteOnly] public NativeArray<float> ResultVariance;
 
-        public int Width;
-        public int Height;
+        [ReadOnly] public int Width;
+        [ReadOnly] public int Height;
 
         public void Execute(int index)
         {

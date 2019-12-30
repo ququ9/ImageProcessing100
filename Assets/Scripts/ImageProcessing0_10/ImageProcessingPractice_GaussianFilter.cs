@@ -56,18 +56,15 @@ public class ImageProcessingPractice_GaussianFilter : ImageProcessingPractice
 
     private struct ImageProcessJob : IJobParallelFor
     {
-        [ReadOnly]
-        public NativeArray<Color32> Pixels;
+        [ReadOnly] public NativeArray<Color32> Pixels;
 
-        [ReadOnly, DeallocateOnJobCompletion]
-        public NativeArray<float> Kernel;
+        [ReadOnly, DeallocateOnJobCompletion] public NativeArray<float> Kernel;
 
-        [WriteOnly]
-        public NativeArray<Color32> Result;
+        [WriteOnly] public NativeArray<Color32> Result;
 
-        public int KernelSize;
-        public int Width;
-        public int Height;
+        [ReadOnly] public int KernelSize;
+        [ReadOnly] public int Width;
+        [ReadOnly] public int Height;
 
         public void Execute(int index)
         {
