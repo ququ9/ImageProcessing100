@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int OffsetY)>
@@ -8,6 +9,8 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
     private readonly int _kernelSize;
     private readonly int _kernelCenter;
     private readonly float[] _kernel;
+
+    public IEnumerable<float> Weights => _kernel;
 
     public ConvolutionKernel(string kernel, float scale = 1.0f)
     {

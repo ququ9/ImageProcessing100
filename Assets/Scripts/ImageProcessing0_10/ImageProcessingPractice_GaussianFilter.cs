@@ -1,22 +1,33 @@
-﻿using TMPro;
+﻿using System.Linq;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 [ImageProcessingPractice(9, "ガウシアンフィルター")]
 public class ImageProcessingPractice_GaussianFilter : ImageProcessingPractice
 {
-    [SerializeField, Range(1, 10)] private int _cellSize = 3;
+    [SerializeField, Range(1, 10)] private int _kernelSize = 3;
     [SerializeField] private float _standardDeviation = 1.3f;
 
     public override void OnProcess()
     {
         var variance = (_standardDeviation * _standardDeviation);
-        var kernel = this.CreateGaussianKernel(_cellSize, variance);
+        var kernel = this.CreateGaussianKernel(_kernelSize, variance);
 
-        using (var temp = TextureData.CreateTemporal(_source.Width, _source.Height)) {
-            foreach (var (x, y) in _source) {
-                var c = kernel.Apply(x, y, _source);
-                temp.SetPixel(x, y, c);
-            }
+        var job = new ImageProcessJob
+        {
+          Pixels = _source.Pixels,
+          Width = _source.Width,
+          Height = _source.Height,
+          Kernel = new NativeArray<float>(kernel.Weights.ToArray(), Allocator.TempJob),
+          KernelSize = _kernelSize,
+          Result = new NativeArray<Color32>((_source.Width * _source.Height), Allocator.TempJob, NativeArrayOptions.UninitializedMemory)
+        };
+
+        var handle = job.Schedule(job.Result.Length, 8);
+        handle.Complete();
+
+        using (var temp = new TextureData(_source.Width, _source.Height, job.Result)) {
             temp.ApplyToTexture(_result);
         }
     }
@@ -41,5 +52,47 @@ public class ImageProcessingPractice_GaussianFilter : ImageProcessingPractice
         }
 
         return kernel;
+    }
+
+    private struct ImageProcessJob : IJobParallelFor
+    {
+        [ReadOnly]
+        public NativeArray<Color32> Pixels;
+
+        [ReadOnly, DeallocateOnJobCompletion]
+        public NativeArray<float> Kernel;
+
+        [WriteOnly]
+        public NativeArray<Color32> Result;
+
+        public int KernelSize;
+        public int Width;
+        public int Height;
+
+        public void Execute(int index)
+        {
+            var pixelY = (index / this.Width);
+            var pixelX = (index - (pixelY * this.Width));
+            var kernelCenter = this.KernelSize / 2;
+
+            float r = 0.0f, g = 0.0f, b = 0.0f;
+            for (var iKernel = 0; iKernel < Kernel.Length; ++iKernel) {
+                var weight = this.Kernel[iKernel];
+
+                var yKernel = (iKernel / KernelSize);
+                var xKernel = (iKernel - (yKernel * KernelSize));
+
+                var x = Mathf.Clamp(pixelX + xKernel - kernelCenter, 0, this.Width - 1);
+                var y = Mathf.Clamp(pixelY + yKernel - kernelCenter, 0, this.Height - 1);
+                var c = this.Pixels[(y * this.Width) + x];
+                r += (weight * c.r);
+                g += (weight * c.g);
+                b += (weight * c.b);
+            }
+
+            var pixelIndex = ((pixelY * this.Width) + pixelX);
+            var o = this.Pixels[pixelIndex];
+            this.Result[pixelIndex] = new Color32((byte)Mathf.Clamp((byte)r, 0, 255) , (byte)Mathf.Clamp((byte)g, 0, 255), (byte)Mathf.Clamp((byte)b, 0, 255), o.a);
+        }
     }
 }

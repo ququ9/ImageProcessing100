@@ -25,7 +25,7 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
         _pixels = new NativeArray<Color32>(source.GetRawTextureData<Color32>(), isTemporal ? Allocator.Temp : Allocator.Persistent);
     }
 
-    private TextureData(int width, int height, NativeArray<Color32> tempBuffer)
+    public TextureData(int width, int height, NativeArray<Color32> tempBuffer)
     {
         _pixels = tempBuffer;
         _width = width;
