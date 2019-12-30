@@ -59,6 +59,9 @@ public class ImageProcessingPracticeController : MonoBehaviour
         var path = Path.Combine(Application.dataPath, "../Results", fileName);
         File.WriteAllBytes(path, _currentEffect.ResultTexture.EncodeToPNG());
 
+        var desc = att?.Description ?? "no description";
+        File.WriteAllText(path + ".meta", desc);
+
         Debug.Log($"Save {path}");
     }
 
