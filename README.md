@@ -11,7 +11,7 @@
   <em>001: チャンネル入れ替え</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/001.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/001.png" alt width="256" height="256">
 </p>
 
 
@@ -19,7 +19,7 @@
   <em>002: グレースケール変換</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/002.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/002.png" alt width="256" height="256">
 </p>
 
 
@@ -27,7 +27,7 @@
   <em>003: 2値化</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/003.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/003.png" alt width="256" height="256">
 </p>
 
 
@@ -35,7 +35,7 @@
   <em>004: 大津の2値化</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/004.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/004.png" alt width="256" height="256">
 </p>
 
 
@@ -43,7 +43,7 @@
   <em>005: HSV変換</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/005.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/005.png" alt width="256" height="256">
 </p>
 
 
@@ -51,7 +51,7 @@
   <em>006: 減色</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/006.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/006.png" alt width="256" height="256">
 </p>
 
 
@@ -59,7 +59,7 @@
   <em>007: 平均プーリング</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/007.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/007.png" alt width="256" height="256">
 </p>
 
 
@@ -67,7 +67,7 @@
   <em>008: Maxプーリング</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/008.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/008.png" alt width="256" height="256">
 </p>
 
 
@@ -75,7 +75,7 @@
   <em>009: ガウシアンフィルター</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/009.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/009.png" alt width="256" height="256">
 </p>
 
 
@@ -83,7 +83,7 @@
   <em>010: メディアンフィルター</em>
 </p>
 <p>
-  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/010.png" alt>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/010.png" alt width="256" height="256">
 </p>
 
 
