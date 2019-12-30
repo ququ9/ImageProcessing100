@@ -7,7 +7,7 @@ public static class ColorUtility
 {
     public struct HSV
     {
-        public float h;
+        public int h;
         public byte s;
         public byte v;
         public short a;
@@ -27,19 +27,17 @@ public static class ColorUtility
         foreach (var c in source) {
             var max = Mathf.Max(Mathf.Max(c.r, c.g), c.b);
             var min = Mathf.Min(Mathf.Min(c.r, c.g), c.b);
-
-            var hsv = new HSV { h = 0.0f, s = (byte)(max - min), v = (byte)max, a = c.a };
-
+            var hsv = new HSV { h = 0, s = (byte)(max - min), v = (byte)max, a = c.a };
+            
             if (min == max) {
                 hsv.h = 0;
             } else if (min == c.b) {
-                hsv.h = 60.0f * (c.g - c.r) / hsv.s + 60.0f;
+                hsv.h = 60 * (c.g - c.r) / hsv.s + 60;
             } else if (min == c.r) {
-                hsv.h = 60.0f * (c.b - c.g) / hsv.s + 180.0f;
+                hsv.h = 60 * (c.b - c.g) / hsv.s + 180;
             } else { // if (min == c.g)
-                hsv.h = 60.0f * (c.r - c.b) / hsv.s + 300.0f;
+                hsv.h = 60 * (c.r - c.b) / hsv.s + 300;
             }
-
             result[i++] = hsv;
         }
         return result;
@@ -51,34 +49,36 @@ public static class ColorUtility
 
         var i = 0;
         foreach (var hsv in source) {
-            var h = ((int)hsv.h / 60);
+            var h = (((hsv.h + 360) % 360) / 60.0f);
             var c = hsv.s;
-            var x = (byte)(c * (1 - Mathf.Abs((h % 2) - 1)));
+            var x = (int)(c * (1 - Mathf.Abs((h % 2) - 1)));
 
-            var t = (byte)(hsv.v - hsv.s);
-            var rgb = new Color32(t, t, t, (byte)hsv.a);
-            if (h > 0) {
-                if (h < 1) {
-                    rgb.r += c;
-                    rgb.g += x;
-                } else if (h < 2) {
-                    rgb.r += x;
-                    rgb.g += c;
-                } else if (h < 3) {
-                    rgb.g += c;
-                    rgb.b += x;
-                } else if (h < 4) {
-                    rgb.g += x;
-                    rgb.b += c;
-                } else if (h < 5) {
-                    rgb.r += x;
-                    rgb.b += c;
-                } else if (h < 6) {
-                    rgb.r += c;
-                    rgb.b += x;
-                }
+            var t = (hsv.v - hsv.s);
+            var r = t;
+            var g = t;
+            var b = t;
+
+            if (h < 1) {
+                r += c;
+                g += x;
+            } else if (h < 2) {
+                r += x;
+                g += c;
+            } else if (h < 3) {
+                g += c;
+                b += x;
+            } else if (h < 4) {
+                g += x;
+                b += c;
+            } else if (h < 5) {
+                r += x;
+                b += c;
+            } else if (h < 6) {
+                r += c;
+                b += x;
             }
-            result[i++] = rgb;
+
+            result[i++] = new Color32((byte)Mathf.Clamp(r, 0, 255), (byte)Mathf.Clamp(g, 0, 255), (byte)Mathf.Clamp(b, 0, 255), (byte)hsv.a);
         }
         return result;
     }

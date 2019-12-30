@@ -52,12 +52,12 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
 
     public static NativeArray<ColorUtility.HSV> CreateTemporalHSVFromRGB(TextureData rgb)
     {
-        return ColorUtility.RGBtoHSV(rgb._pixels);
+        return ColorUtility.RGBtoHSV(rgb._pixels, true);
     }
 
     public static TextureData CreateTemporalRGBFromHSV(NativeArray<ColorUtility.HSV> hsv, int width, int height)
     {
-        var result = ColorUtility.HSVtoRGB(hsv);
+        var result = ColorUtility.HSVtoRGB(hsv, true);
         return new TextureData(width, height, result);
     }
 
