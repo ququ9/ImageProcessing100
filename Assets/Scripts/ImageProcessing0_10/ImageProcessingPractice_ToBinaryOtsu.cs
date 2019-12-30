@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 [ImageProcessingPractice(4, "大津の2値化")]
 public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
 {
+    private const int MaxQuantization = 256;
+
     public override void OnProcess(TextureData source)
     {
+        var job = new ImageProcessJob();
+        job.Pixels = source.Pixels;
+        job.Width = source.Width;
+        job.Height = source.Height;
+        job.ResultVariance = new NativeArray<float>(MaxQuantization, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+
+        var handle = job.Schedule(MaxQuantization, 8);
+        handle.Complete();
+
+        var result = job.ResultVariance;
         using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(source)) {
             var maxVariance = float.MinValue;
             var maxVarianceIndex = 0;
-            for (var i = 0; i < 255; ++i) {
+            for (var i = 0; i < MaxQuantization; ++i) {
                 var threshold = i;
-                var variance = this.CalcVariance(temp, threshold);
+                var variance = result[i];
                 if (!(variance > maxVariance)) {
                     continue;
                 }
@@ -24,8 +38,6 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
 
             var resultThreshold = maxVarianceIndex;
 
-            var black = new Color32(0, 0, 0, 255);
-            var white = new Color32(255, 255, 255, 255);
             foreach (var (x, y) in source) {
                 var t = ColorUtility.RGBtoGrayScale(source.GetPixel(x, y));
                 var c = (t.r >= resultThreshold) ? new Color32(255, 255, 255, t.a) : new Color32(0, 0, 0, t.a);
@@ -33,33 +45,48 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
             }
             temp.ApplyToTexture(_result);
         }
+
+        job.ResultVariance.Dispose();
     }
 
-    private float CalcVariance(TextureData grayscaleImage, int threshold)
+    private struct ImageProcessJob : IJobParallelFor
     {
-        var numClass0 = 0;
-        var numClass1 = 0;
-        var sumClass0 = 0.0f;
-        var sumClass1 = 0.0f;
+        [ReadOnly]
+        public NativeArray<Color32> Pixels;
 
-        foreach (var (x, y) in grayscaleImage) {
-            var t = (int)grayscaleImage.GetPixel(x, y).r;
-            if (t < threshold) {
-                ++numClass0;
-                sumClass0 += t;
-            } else {
-                ++numClass1;
-                sumClass1 += t;
+        [WriteOnly]
+        public NativeArray<float> ResultVariance;
+
+        public int Width;
+        public int Height;
+
+        public void Execute(int index)
+        {
+            var numClass0 = 0;
+            var numClass1 = 0;
+            var sumClass0 = 0.0f;
+            var sumClass1 = 0.0f;
+            var threshold = index;
+
+            foreach (var p in this.Pixels) {
+                var t = p.r;
+                if (t < threshold) {
+                    ++numClass0;
+                    sumClass0 += t;
+                } else {
+                    ++numClass1;
+                    sumClass1 += t;
+                }
             }
+
+            var aveClass0 = (numClass0 > 0) ? (float)(sumClass0 / numClass0) : 0.0f;
+            var aveClass1 = (numClass1 > 0) ? (float)(sumClass1 / numClass1) : 0.0f;
+
+            var invPixelCount = 1.0f / (this.Width * this.Height);
+            var w0 = numClass0 * invPixelCount;
+            var w1 = numClass1 * invPixelCount;
+
+            ResultVariance[index] = w0 * w1 * (aveClass0 - aveClass1) * (aveClass0 - aveClass1);
         }
-
-        var aveClass0 = (numClass0 > 0) ? (float)(sumClass0 / numClass0) : 0.0f;
-        var aveClass1 = (numClass1 > 0) ? (float)(sumClass1 / numClass1) : 0.0f;
-
-        var invPixelCount = 1.0f / (grayscaleImage.Width * grayscaleImage.Height);
-        var w0 = numClass0 * invPixelCount;
-        var w1 = numClass1 * invPixelCount;
-
-        return w0 * w1 * (aveClass0 - aveClass1) * (aveClass0 - aveClass1);
     }
 }

@@ -15,6 +15,8 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
     public int Width => _width;
     public int Height => _height;
 
+    public NativeArray<Color32> Pixels => _pixels;
+
     public TextureData(Texture2D source, bool isTemporal)
     {
         _width = source.width;
