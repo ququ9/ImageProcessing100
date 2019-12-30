@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int OffsetY)>
@@ -40,6 +39,7 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
     public ConvolutionKernel(int kernelSize)
     {
         _kernelSize = kernelSize;
+        _kernelCenter = _kernelSize / 2;
         _kernel = new float[kernelSize * kernelSize];
     }
 
@@ -47,7 +47,9 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
     {
         float r = 0.0f, g = 0.0f, b = 0.0f;
         foreach (var (x, y, kx, ky) in this) {
-            var c = source.GetPixelSafe(pixelX + kx, pixelY + ky);
+            var cx = pixelX + kx;
+            var cy = pixelY + ky;
+            var c = source.GetPixelSafe(cx, cy);
             var weight = _kernel[(y * _kernelSize) + x];
             r += (weight * c.r);
             g += (weight * c.g);
@@ -57,11 +59,20 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
         return new Color32((byte)Mathf.Clamp((byte)r, 0, 255) , (byte)Mathf.Clamp((byte)g, 0, 255), (byte)Mathf.Clamp((byte)b, 0, 255), o.a);
     }
 
-    public void SetWeight(int kernelCoordinateX, int kernelCoordinateY)
+    public void SetWeight(int kernelCoordinateX, int kernelCoordinateY, float weight)
     {
         var x = kernelCoordinateX + _kernelCenter;
         var y = kernelCoordinateY + _kernelCenter;
         var index = ((y * _kernelSize) + x);
+        _kernel[index] = weight;
+    }
+
+    public float GetWeight(int kernelCoordinateX, int kernelCoordinateY)
+    {
+        var x = kernelCoordinateX + _kernelCenter;
+        var y = kernelCoordinateY + _kernelCenter;
+        var index = ((y * _kernelSize) + x);
+        return _kernel[index];
     }
 
     public IEnumerator<(int X, int Y, int OffsetX, int OffsetY)> GetEnumerator()
