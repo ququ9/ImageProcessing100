@@ -79,3 +79,11 @@
 </p>
 
 
+<p>
+  <em>010: メディアンフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/010.png" alt>
+</p>
+
+
