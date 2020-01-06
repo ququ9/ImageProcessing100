@@ -87,3 +87,43 @@
 </p>
 
 
+<p>
+  <em>011: 平滑化フィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/011.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>012: モーションフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/012.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>013: MAX-MINフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/013.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>014: 微分フィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/014.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>015: Sobelフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/015.png" alt width="256" height="256">
+</p>
+
+
