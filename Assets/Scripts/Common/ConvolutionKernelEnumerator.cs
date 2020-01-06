@@ -21,7 +21,7 @@ public class ConvolutionKernelEnumerator : IEnumerator<(int X, int Y, int Offset
         _kernelCenterY = kernelHeight / 2;
         _pixelCount = (kernelWidth * kernelHeight);
 
-        _currentIndex = 0;
+        _currentIndex = -1;
     }
 
     public bool MoveNext()
@@ -36,7 +36,7 @@ public class ConvolutionKernelEnumerator : IEnumerator<(int X, int Y, int Offset
 
     public void Reset()
     {
-        _currentIndex = 0;
+        _currentIndex = -1;
     }
 
     void IDisposable.Dispose() { }

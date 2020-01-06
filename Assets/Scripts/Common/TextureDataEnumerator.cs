@@ -16,7 +16,7 @@ public class TextureDataEnumerator : IEnumerator<(int X, int Y)>
         _height = height;
         _pixelCount = (width * height);
 
-        _currentIndex = 0;
+        _currentIndex = -1;
     }
 
     public bool MoveNext()
@@ -31,7 +31,7 @@ public class TextureDataEnumerator : IEnumerator<(int X, int Y)>
 
     public void Reset()
     {
-        _currentIndex = 0;
+        _currentIndex = -1;
     }
 
     void IDisposable.Dispose() { }
