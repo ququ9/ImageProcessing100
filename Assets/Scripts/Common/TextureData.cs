@@ -87,6 +87,8 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
 
     public Color32 GetPixelSafe(int x, int y)
     {
+        x = Mathf.Clamp(x, 0, _width - 1);
+        y = Mathf.Clamp(y, 0, _height - 1);
         if (!this.IsValidCoordinate(x, y)) {
             return kColorBlack;
         }
