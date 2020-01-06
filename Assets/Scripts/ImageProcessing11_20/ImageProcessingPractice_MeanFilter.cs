@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
+using Unity.Collections;
+using Unity.Jobs;
 
 [ImageProcessingPractice(11, "平滑化フィルター")]
 public class ImageProcessingPractice_MeanFilter : ImageProcessingPractice
@@ -12,10 +14,12 @@ public class ImageProcessingPractice_MeanFilter : ImageProcessingPractice
         var kernelText = string.Join("\n", Enumerable.Range(0, _kernelSize).Select(_ => string.Join(",", Enumerable.Range(0, _kernelSize).Select(__ => "1"))));
 
         var kernel = new ConvolutionKernel(kernelText, scale);
-        using (var temp = TextureData.CreateTemporal(_source.Width, _source.Height)) {
-            foreach (var (x, y) in _source) {
-                temp.SetPixel(x, y, kernel.Apply(x, y, _source));
-            }
+
+        var job = ApplyKernelJob.Create(_source, kernel);
+        var handle = job.Schedule(job.Result.Length, 8);
+        handle.Complete();
+        
+        using (var temp = new TextureData(_source.Width, _source.Height, job.Result)) {
             temp.ApplyToTexture(_result);
         }
     }
