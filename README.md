@@ -127,3 +127,27 @@
 </p>
 
 
+<p>
+  <em>016: Prewittフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/016.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>017: Laplacianフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/017.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>018: Embossフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/018.png" alt width="256" height="256">
+</p>
+
+
