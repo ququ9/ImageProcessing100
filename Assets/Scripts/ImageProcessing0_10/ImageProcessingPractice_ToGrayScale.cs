@@ -5,7 +5,7 @@ public class ImageProcessingPractice_ToGrayScale : ImageProcessingPractice
 {
     public override void OnProcess()
     {
-        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(_source)) { 
+        using (var temp = TextureData.CreateGrayScaleFromRGB(_source, isTemporal: true)) { 
             temp.ApplyToTexture(_result);
         }
     }

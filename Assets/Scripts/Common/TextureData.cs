@@ -39,13 +39,19 @@ public class TextureData : IEnumerable<(int x, int y)>, IDisposable
 
     public static TextureData CreateTemporal(int width, int height)
     {
-        var tempBuffer = new NativeArray<Color32>(width * height, Allocator.Temp, NativeArrayOptions.UninitializedMemory);
+        return TextureData.Create(width, height, isTemporal: true);
+    }
+
+    public static TextureData Create(int width, int height, bool isTemporal)
+    {
+        var alloc = isTemporal ? Allocator.Temp : Allocator.Persistent;
+        var tempBuffer = new NativeArray<Color32>(width * height, alloc, NativeArrayOptions.UninitializedMemory);
         return new TextureData(width, height, tempBuffer);
     }
 
-    public static TextureData CreateTemporalGrayScaleFromRGB(TextureData rgb)
+    public static TextureData CreateGrayScaleFromRGB(TextureData rgb, bool isTemporal)
     {
-        var temp = TextureData.CreateTemporal(rgb.Width, rgb.Height);
+        var temp = TextureData.Create(rgb.Width, rgb.Height, isTemporal);
         foreach (var (x, y) in rgb) {
             temp.SetPixel(x, y, ColorUtility.RGBtoGrayScale(rgb.GetPixel(x, y)));
         }

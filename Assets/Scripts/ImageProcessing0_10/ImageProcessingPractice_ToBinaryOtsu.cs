@@ -19,7 +19,7 @@ public class ImageProcessingPractice_ToBinaryOtsu : ImageProcessingPractice
         handle.Complete();
 
         var result = job.ResultVariance;
-        using (var temp = TextureData.CreateTemporalGrayScaleFromRGB(_source)) {
+        using (var temp = TextureData.CreateGrayScaleFromRGB(_source, isTemporal: true)) {
             var maxVariance = float.MinValue;
             var maxVarianceIndex = 0;
             for (var i = 0; i < MaxQuantization; ++i) {
