@@ -14,6 +14,12 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
 
     public IEnumerable<float> Weights => _kernel;
 
+    public int KernelWidth => _kernelWidth;
+    public int KernelHeight => _kernelHeight;
+
+    public int KernelCenterX => _kernelCenterX;
+    public int KernelCenterY => _kernelCenterY;
+
     public ConvolutionKernel(string kernel, float scale = 1.0f)
     {
         var rows = kernel.Split('\n');

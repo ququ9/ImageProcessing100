@@ -14,16 +14,7 @@ public class ImageProcessingPractice_GaussianFilter : ImageProcessingPractice
         var variance = (_standardDeviation * _standardDeviation);
         var kernel = this.CreateGaussianKernel(_kernelSize, variance);
 
-        var job = new ApplyKernelJob
-        {
-          Pixels = _source.Pixels,
-          Width = _source.Width,
-          Height = _source.Height,
-          Kernel = new NativeArray<float>(kernel.Weights.ToArray(), Allocator.TempJob),
-          KernelSize = _kernelSize,
-          Result = new NativeArray<Color32>((_source.Width * _source.Height), Allocator.TempJob, NativeArrayOptions.UninitializedMemory)
-        };
-
+        var job = ApplyKernelJob.Create(_source, kernel);
         var handle = job.Schedule(job.Result.Length, 8);
         handle.Complete();
 
