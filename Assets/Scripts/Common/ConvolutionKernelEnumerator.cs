@@ -6,15 +6,20 @@ public class ConvolutionKernelEnumerator : IEnumerator<(int X, int Y, int Offset
 {
     private int _currentIndex;
 
-    private readonly int _kernelSize;
-    private readonly int _kernelCenter;
+    private readonly int _kernelWidth;
+    private readonly int _kernelHeight;
+    private readonly int _kernelCenterX;
+    private readonly int _kernelCenterY;
     private readonly int _pixelCount;
 
-    public ConvolutionKernelEnumerator(int kernelSize)
+    public ConvolutionKernelEnumerator(int kernelWidth, int kernelHeight)
     {
-        _kernelSize = kernelSize;
-        _kernelCenter = (_kernelSize / 2);
-        _pixelCount = (kernelSize * kernelSize);
+        _kernelWidth = kernelWidth;
+        _kernelHeight = kernelHeight;
+
+        _kernelCenterX = _kernelWidth / 2;
+        _kernelCenterY = kernelHeight / 2;
+        _pixelCount = (kernelWidth * kernelHeight);
 
         _currentIndex = 0;
     }
@@ -39,12 +44,12 @@ public class ConvolutionKernelEnumerator : IEnumerator<(int X, int Y, int Offset
     public (int X, int Y, int OffsetX, int OffsetY) Current
     {
         get {
-            var y = (_currentIndex / _kernelSize);
+            var y = (_currentIndex / _kernelWidth);
             // var x = (_currentIndex % _width);
-            var x = (_currentIndex - (y * _kernelSize));
+            var x = (_currentIndex - (y * _kernelWidth));
 
             // 処理するピクセルに対して中心からの距離を返す([-kernel_size/2, kernel_size/2], [-kernel_size/2, kernel_size/2])
-            return (x, y, x - _kernelCenter, y - _kernelCenter);
+            return (x, y, x - _kernelCenterX, y - _kernelCenterY);
         }
     }
 

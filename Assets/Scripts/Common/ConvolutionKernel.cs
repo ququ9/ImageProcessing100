@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int OffsetY)>
 {
-    private readonly int _kernelSize;
-    private readonly int _kernelCenter;
+    private readonly int _kernelWidth;
+    private readonly int _kernelHeight;
+    private readonly int _kernelCenterX;
+    private readonly int _kernelCenterY;
     private readonly float[] _kernel;
 
     public IEnumerable<float> Weights => _kernel;
@@ -15,25 +17,23 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
     public ConvolutionKernel(string kernel, float scale = 1.0f)
     {
         var rows = kernel.Split('\n');
+        _kernelHeight = rows.Length;
+        _kernelCenterY = _kernelHeight / 2;
+
         var columns = rows.Select(row => row.Split(',')).ToArray();
+        _kernelWidth = columns.Select(c => c.Length).Max();
+        _kernelCenterX = _kernelWidth / 2;
 
-        var columnSize = columns.Select(c => c.Length).Max();
-        _kernelSize = rows.Length * columnSize;
-        _kernelCenter = _kernelSize / 2;
-        _kernel = new float[_kernelSize * _kernelSize];
+        _kernel = new float[_kernelWidth * _kernelHeight];
 
-        if ((_kernelSize & 0x01) == 0) {
-            Debug.LogWarning($"Kernel Size is even");
-        }
-
-        for (var r = 0; r < rows.Length; ++r) {
+        for (var r = 0; r < _kernelHeight; ++r) {
             var column = columns[r];
-            for (var c = 0; c < columnSize; ++c) {
+            for (var c = 0; c < _kernelWidth; ++c) {
                 if (c < column.Length) {
-                    _kernel[(columnSize * r) + c] = float.Parse(column[c].Trim()) * scale;
+                    _kernel[(_kernelWidth * r) + c] = float.Parse(column[c].Trim()) * scale;
                 } else {
                     // そもそも不正な形式ではあるが一応0で埋めておく
-                    _kernel[(columnSize * r) + c] = 0.0f;
+                    _kernel[(_kernelWidth * r) + c] = 0.0f;
                 }
             }
         }
@@ -41,8 +41,8 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
 
     public ConvolutionKernel(int kernelSize)
     {
-        _kernelSize = kernelSize;
-        _kernelCenter = _kernelSize / 2;
+        _kernelWidth = _kernelHeight = kernelSize;
+        _kernelCenterX = _kernelCenterY = kernelSize / 2;
         _kernel = new float[kernelSize * kernelSize];
     }
 
@@ -53,34 +53,34 @@ public class ConvolutionKernel : IEnumerable<(int X, int Y, int OffsetX, int Off
             var cx = pixelX + kx;
             var cy = pixelY + ky;
             var c = source.GetPixelSafe(cx, cy);
-            var weight = _kernel[(y * _kernelSize) + x];
+            var weight = _kernel[(y * _kernelWidth) + x];
             r += (weight * c.r);
             g += (weight * c.g);
             b += (weight * c.b);
         }
         var o = source.GetPixel(pixelX, pixelY);
-        return new Color32((byte)Mathf.Clamp((byte)r, 0, 255) , (byte)Mathf.Clamp((byte)g, 0, 255), (byte)Mathf.Clamp((byte)b, 0, 255), o.a);
+        return new Color32((byte)Mathf.Clamp((int)r, 0, 255) , (byte)Mathf.Clamp((int)g, 0, 255), (byte)Mathf.Clamp((int)b, 0, 255), o.a);
     }
 
     public void SetWeight(int kernelCoordinateX, int kernelCoordinateY, float weight)
     {
-        var x = kernelCoordinateX + _kernelCenter;
-        var y = kernelCoordinateY + _kernelCenter;
-        var index = ((y * _kernelSize) + x);
+        var x = kernelCoordinateX + _kernelCenterX;
+        var y = kernelCoordinateY + _kernelCenterY;
+        var index = ((y * _kernelWidth) + x);
         _kernel[index] = weight;
     }
 
     public float GetWeight(int kernelCoordinateX, int kernelCoordinateY)
     {
-        var x = kernelCoordinateX + _kernelCenter;
-        var y = kernelCoordinateY + _kernelCenter;
-        var index = ((y * _kernelSize) + x);
+        var x = kernelCoordinateX + _kernelCenterX;
+        var y = kernelCoordinateY + _kernelCenterY;
+        var index = ((y * _kernelWidth) + x);
         return _kernel[index];
     }
 
     public IEnumerator<(int X, int Y, int OffsetX, int OffsetY)> GetEnumerator()
     {
-        return new ConvolutionKernelEnumerator(_kernelSize);
+        return new ConvolutionKernelEnumerator(_kernelWidth, _kernelHeight);
     }
 
     IEnumerator IEnumerable.GetEnumerator()
