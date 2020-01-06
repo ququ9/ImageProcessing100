@@ -145,7 +145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 28538166}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.4, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 226243777}
@@ -258,6 +258,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 1059afba6ff9f4af88ad15fd09bf323c, type: 3}
   - {fileID: 21300000, guid: fd36db4e38ff54aafa7176b6106aae0a, type: 3}
   - {fileID: 21300000, guid: cc8b886cbfa544a78aa9d2b59b378e72, type: 3}
+  - {fileID: 21300000, guid: 3a2599a078565404e8ef77d2354dcaab, type: 3}
   _sourceDropdown: {fileID: 899345107}
   _imageEffects: {fileID: 632881039}
   _saveButton: {fileID: 372166483}
@@ -3161,7 +3162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1703862442}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.4, y: 0, z: 0}
+  m_LocalPosition: {x: -4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 226243777}
