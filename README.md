@@ -151,3 +151,27 @@
 </p>
 
 
+<p>
+  <em>019: LoGフィルター</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/019.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>020: ヒストグラム</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/020.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>021: ヒストグラム正規化</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/021.png" alt width="256" height="256">
+</p>
+
+

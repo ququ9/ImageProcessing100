@@ -13,6 +13,16 @@ public static class ColorUtility
         public short a;
     }
 
+    public static Color32 MinRGB(ref Color32 c1, ref Color32 c2)
+    {
+        return new Color32((byte)Mathf.Min(c1.r, c2.r), (byte)Mathf.Min(c1.g, c2.g), (byte)Mathf.Min(c1.b, c2.b), 255);
+    }
+
+    public static Color32 MaxRGB(ref Color32 c1, ref Color32 c2)
+    {
+        return new Color32((byte)Mathf.Max(c1.r, c2.r), (byte)Mathf.Max(c1.g, c2.g), (byte)Mathf.Max(c1.b, c2.b), 255);
+    }
+
     public static Color32 RGBtoGrayScale(Color32 c)
     {
         var t = (byte)Mathf.Clamp((int)(0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b), 0, 255);
