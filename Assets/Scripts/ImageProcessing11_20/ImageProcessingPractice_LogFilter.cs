@@ -12,7 +12,6 @@ public class ImageProcessingPractice_LogFilter : ImageProcessingPractice
     public override void OnProcess()
     {
         var kernel = this.CreateKernel(_kernelSize, _sigma);
-        Debug.Log($"{string.Join(" ", kernel.Weights)}");
 
         using (var grayScale = TextureData.CreateGrayScaleFromRGB(_source, isTemporal: false)) {
             using (var temp = TextureData.CreateTemporal(_source.Width, _source.Height)) {
