@@ -215,3 +215,35 @@
 </p>
 
 
+<p>
+  <em>027: バイキュービック補間</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/027.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>028: 平行移動</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/028.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>029: 拡大縮小</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/029.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>030: 回転</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/030.png" alt width="256" height="256">
+</p>
+
+
