@@ -175,3 +175,43 @@
 </p>
 
 
+<p>
+  <em>022: ヒストグラム操作</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/022.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>023: ヒストグラム平坦化</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/023.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>024: ガンマ補正</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/024.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>025: 最近傍補間</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/025.png" alt width="256" height="256">
+</p>
+
+
+<p>
+  <em>026: バイリニア補間</em>
+</p>
+<p>
+  <img src="https://github.com/ququ9/ImageProcessing100/blob/master/Results/026.png" alt width="256" height="256">
+</p>
+
+
